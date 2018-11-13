@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.drawable.GradientDrawable;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +16,8 @@ import java.util.List;
 
 public class ContactRecyclerAdapter extends RecyclerView.Adapter<ContactRecyclerAdapter.ViewHolder> {
 
+    private static final String TAG = ContactRecyclerAdapter.class.getSimpleName();
+
     //Interface for callbacks
     interface ActionCallback {
         void onLongClickListener(Contact contact);
@@ -25,6 +28,7 @@ public class ContactRecyclerAdapter extends RecyclerView.Adapter<ContactRecycler
     private int[] colors;
     private ActionCallback mActionCallbacks;
 
+    // Constructor for class
     ContactRecyclerAdapter(Context context, List<Contact> contactList, int[] colors){
         this.context = context;
         this.contactList = contactList;
@@ -38,6 +42,7 @@ public class ContactRecyclerAdapter extends RecyclerView.Adapter<ContactRecycler
         return new ViewHolder(view);
     }
 
+    // Bind items present in viewHolder (TextViews) with data populated from Database in List
     @Override
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int position) {
         viewHolder.bindData(position);
@@ -56,7 +61,7 @@ public class ContactRecyclerAdapter extends RecyclerView.Adapter<ContactRecycler
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnLongClickListener{
         private TextView mNameTextView;
         private TextView mInitialsTextView;
-        private GradientDrawable mInitialsBackground;
+        private GradientDrawable mInitialsBackground; // Gradient color option for Initials(First Character) textView
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -66,33 +71,32 @@ public class ContactRecyclerAdapter extends RecyclerView.Adapter<ContactRecycler
             mInitialsTextView = itemView.findViewById(R.id.initialsTextView);
             mNameTextView = itemView.findViewById(R.id.nameTextView);
             mInitialsBackground = (GradientDrawable) mInitialsTextView.getBackground();
-
         }
 
+        // Bind data stored in Contact object with the items present in the list.
         void bindData(int position){
             Contact contact = contactList.get(position);
 
             String fullName = contact.getFirstName() + " " + contact.getLastName();
             mNameTextView.setText(fullName);
+            Log.d(TAG, "bindData: fullName = " + fullName);
 
             String initial = contact.getFirstName().toUpperCase().substring(0, 1); // Get first character of name
             mInitialsTextView.setText(initial);
 
             mInitialsBackground.setColor(colors[position % colors.length]);
-
         }
 
         @Override
         public boolean onLongClick(View v) {
             if (mActionCallbacks != null){
-                mActionCallbacks.onLongClickListener(contactList.get(getAdapterPosition()));
+                mActionCallbacks.onLongClickListener(contactList.get(getAdapterPosition())); // get Contact present at specific position
             }
             return true;
         }
+    }
 
-        void addActionCallback(ActionCallback actionCallbacks) {
-            mActionCallbacks = actionCallbacks;
-        }
-
+    void addActionCallback(ActionCallback actionCallbacks) {
+        mActionCallbacks = actionCallbacks;
     }
 }
