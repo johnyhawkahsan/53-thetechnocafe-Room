@@ -74,6 +74,7 @@ public class MainActivity extends AppCompatActivity {
                 startActivityForResult(intent, RC_CREATE_CONTACT);
             }
         });
+
         loadContacts();
     }
 

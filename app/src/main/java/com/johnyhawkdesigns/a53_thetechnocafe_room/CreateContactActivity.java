@@ -4,6 +4,7 @@ import android.arch.persistence.room.Room;
 import android.database.sqlite.SQLiteConstraintException;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -17,6 +18,7 @@ import java.util.Date;
 
 public class CreateContactActivity extends AppCompatActivity {
 
+    private static final String TAG = CreateContactActivity.class.getSimpleName();
     private EditText mFirstNameEditText;
     private EditText mLastNameEditText;
     private EditText mPhoneNumberEditText;
@@ -27,6 +29,8 @@ public class CreateContactActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_contact);
+
+        getSupportActionBar().setTitle("Create new Contact");
 
         // Get instance of DAO from Database class
         mContactDAO = Room.databaseBuilder(this, AppDatabase.class, "db-contacts")
@@ -61,6 +65,8 @@ public class CreateContactActivity extends AppCompatActivity {
                 //Insert to database
                 try {
                     mContactDAO.insert(contact);
+                    Log.d(TAG, "onClick: inserting new contact = " + contact.getFirstName() + " " + contact.getLastName() + ", phone no = " + contact.getPhoneNumber());
+                    Toast.makeText(CreateContactActivity.this, "Adding new contact = " + contact.getFirstName() + " " + contact.getLastName() + ", phone no = " + contact.getPhoneNumber() , Toast.LENGTH_LONG).show();
                     setResult(RESULT_OK);
                     finish();
                 } catch (SQLiteConstraintException e) {

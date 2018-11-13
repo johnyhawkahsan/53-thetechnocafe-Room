@@ -3,7 +3,6 @@ package com.johnyhawkdesigns.a53_thetechnocafe_room;
 import android.arch.persistence.room.Room;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -35,6 +34,8 @@ public class UpdateContactActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_update_contact);
 
+        getSupportActionBar().setTitle("Update");
+
         mContactDAO = Room.databaseBuilder(this, AppDatabase.class, "db-contacts")
                 .allowMainThreadQueries()   //Allows room to do operation on main thread
                 .build()
@@ -48,13 +49,13 @@ public class UpdateContactActivity extends AppCompatActivity {
 
         // Create Contact object by searching database
         CONTACT = mContactDAO.getContactWithId(getIntent().getStringExtra(EXTRA_CONTACT_ID));
-        Log.d(TAG, "onCreate: EXTRA_CONTACT_ID = " + EXTRA_CONTACT_ID);
+        Log.d(TAG, "onCreate: get Phone no in Intent = " + getIntent().getStringExtra(EXTRA_CONTACT_ID));
 
         initViews();
     }
 
-    private void initViews() {
 
+    private void initViews() {
         mFirstNameEditText.setText(CONTACT.getFirstName());
         mLastNameEditText.setText(CONTACT.getLastName());
         mPhoneNumberEditText.setText(CONTACT.getPhoneNumber());
@@ -78,6 +79,8 @@ public class UpdateContactActivity extends AppCompatActivity {
 
                 //Insert to database
                 mContactDAO.update(CONTACT);
+                Log.d(TAG, "onClick: inserting new CONTACT = " + CONTACT.getFirstName() + " " + CONTACT.getLastName() + ", phone no = " + CONTACT.getPhoneNumber());
+                Toast.makeText(UpdateContactActivity.this, "Updating CONTACT = " + CONTACT.getFirstName() + " " + CONTACT.getLastName() + ", phone no = " + CONTACT.getPhoneNumber() , Toast.LENGTH_LONG).show();
                 setResult(RESULT_OK);
                 finish();
             }
@@ -95,6 +98,7 @@ public class UpdateContactActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.delete: {
                 mContactDAO.delete(CONTACT);
+                Log.d(TAG, "onOptionsItemSelected: delete CONTACT = " + CONTACT.getFirstName() + " " + CONTACT.getLastName());
                 setResult(RESULT_OK);
                 finish();
                 break;
