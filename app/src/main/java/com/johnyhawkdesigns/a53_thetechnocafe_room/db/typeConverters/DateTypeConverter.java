@@ -1,6 +1,7 @@
 package com.johnyhawkdesigns.a53_thetechnocafe_room.db.typeConverters;
 
 import android.arch.persistence.room.TypeConverter;
+import android.util.Log;
 
 import java.util.Date;
 
@@ -18,16 +19,22 @@ import java.util.Date;
  */
 public class DateTypeConverter {
 
+    private static final String TAG = DateTypeConverter.class.getSimpleName();
+
     // Convert Date to long time
     @TypeConverter
     public long convertDateToLong(Date date){
-        return date.getTime();
+        long longDate = date.getTime();
+        Log.d(TAG, "convertDateToLong: longDate = " + longDate);
+        return longDate;
     }
 
     // Convert long time to Date
     @TypeConverter
     public Date convertLongToDate(long time){
-        return new Date(time);
+        Date dateFromLong = new Date(time);
+        Log.d(TAG, "convertLongToDate: dateFromLong = " + dateFromLong);
+        return dateFromLong;
     }
 
 }

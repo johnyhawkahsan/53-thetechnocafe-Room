@@ -13,6 +13,7 @@ import java.util.List;
 @Dao
 public interface ContactDAO {
 
+    //The three dots (...) are called 'varargs' and are used in method arguments. These are a type of variable Arrays.
     @Insert
     public void insert(Contact... contacts);
 
